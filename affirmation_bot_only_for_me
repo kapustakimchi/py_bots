@@ -1,0 +1,88 @@
+import telebot
+import config
+import schedule
+import time
+import random
+from threading import Thread
+
+bot = telebot.TeleBot(config.TOKEN)
+
+
+@bot.message_handler(commands=['start'])
+def welcome(message):
+    global user_id
+    user_id = message.from_user.id
+    bot.send_message(message.chat.id, 'Привет! Это скромный ботик с аффирмациями!\n'
+                                      'Каждый день в 6:50 ты будешь получать одну фразу с милым стикером.\n'
+                                      'Они помогут твоему настрою на день!🐲')
+
+    bot.send_sticker(message.chat.id, "CAACAgQAAxkBAAEFKF9ivG8x0PCt8XPFZk6j2XiPPi2-eQACjQoAAi8iyVM19uEzTtSQZikE")
+
+
+@bot.message_handler(content_types=['text'])
+def msg():
+    # bot.send_message(message.chat.id, 'I love you')
+
+    randnum = random.randint(1, 10)
+    if randnum == 1:
+        bot.send_message(user_id, 'Сегодня меня переполняет энергия и позитивный настрой')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKiZivZXAqnvKvx0nCMgLemQJB5vR3wACvRcAAoSj4UsJOPhWg4ImGikE")
+    elif randnum == 2:
+        bot.send_message(user_id, 'У меня здоровое тело, блестящий ум, спокойный дух')
+        bot.send_sticker(user_id,
+                         "CAACAgQAAxkBAAEFKgxivYrmI1GVSvDKk9Ps5SU2jmslmAACegoAAp8fCVC2N43mBNYIrykE")
+    elif randnum == 3:
+        bot.send_message(user_id, 'Я верю, что могу всё')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKhBivYtItFAjEwnvwxuEA--E0DN3nAACjhgAAnurAUh7ccSBkaMZPSkE")
+    elif randnum == 4:
+        bot.send_message(user_id, 'Я строю свою жизнь сам')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKhJivYtTH9-4FI_GDWFjzS6a9fKeWQACwhQAArP70Eg4qTcl7eNzqikE")
+    elif randnum == 5:
+        bot.send_message(user_id, 'Я с радостью встречаю вызовы, и мой потенциал справиться с ними безграничен')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKhRivYtZQ3sNTaC-D6FzBMzaWK551gACOBIAAkvP-UjtohSjpc5-NykE")
+    elif randnum == 6:
+        bot.send_message(user_id, 'Я здоров, энергичен и полон счастья')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKhhivYu7MmHdxg1QQD-4_9wY2FbCtQACyhIAAvRpIEiff-HatCS-eikE")
+    elif randnum == 7:
+        bot.send_message(user_id, 'Я открываюсь для новых возможностей самовыражения')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKhxivYvx_zcNlmjhWV-HseFWxrNeswACSBUAAl4owEsUtVvsD6M_ZikE")
+    elif randnum == 8:
+        bot.send_message(user_id, 'С любой задачей, встречающейся мне на пути, приходит также энергия, '
+                                    'необходимая для ее выполнения')
+        bot.send_sticker(user_id,
+                         "CAACAgQAAxkBAAEFKiBivYy5ZbmLDbUkj-pZKrnmOL4qsQACKw0AAtEE0FNp7d4yUi9JxSkE")
+    elif randnum == 9:
+        bot.send_message(user_id, 'Я могу научиться всему, что мне нужно')
+        bot.send_sticker(user_id,
+                         "CAACAgIAAxkBAAEFKiJivYzkCulm_NIvJ4iRDg_-0SFZ_gACnxQAAgWc8Uuf3xEjmEOnPykE")
+    elif randnum == 10:
+        bot.send_message(user_id, 'Я везде вижу возможность заработать деньги,\n'
+                                    'легко реализую лучшие из возможностей')
+        bot.send_sticker(user_id,
+                         "CAACAgQAAxkBAAEFKiRivY3eOA90PGOdzoined4rgQiDuQACLQoAAsd-yVOwksgWYwyXQCkE")
+
+
+
+
+def scheduled_msg():
+    schedule.every().day.at("12:25").do(msg)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+def main_loop():
+    thread = Thread(target=scheduled_msg)
+    thread.start()
+
+    bot.polling(True)
+
+
+if __name__ == '__main__':
+    main_loop()
